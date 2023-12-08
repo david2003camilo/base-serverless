@@ -1,0 +1,26 @@
+{
+  "local": {
+    "username": "root",
+    "password": "root",
+    "database": "nameDb",
+    "host": "0.0.0.0",
+    "dialect": "postgres",
+    "port": 5454
+  },
+  "dev": {
+    "username": "root",
+    "password": "1234",
+    "database": "nameDb",
+    "host": "0.0.0.0",
+    "dialect": "postgres",
+    "port": 5432
+  },
+  "prod": {
+    "username": "root",
+    "password": "1234",
+    "database": "nameDb",
+    "host": "0.0.0.0",
+    "dialect": "postgres",
+    "port": 5432
+  }
+}

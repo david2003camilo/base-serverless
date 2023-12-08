@@ -1,0 +1,26 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - echo Installing enviroment...
+      - npm install -g serverless
+  pre_build:
+    commands:
+      - echo Installing dependencies...
+      - npm install
+  build:
+    commands:
+      - echo $STAGE
+      - echo Migrate...
+      - export NODE_ENV=$STAGE
+      - echo Building layers...
+      - export AWS_SDK_LOAD_CONFIG=1
+      - cp ./app/shared/serverless.$STAGE.yml ./app/shared/serverless.yml
+      - npm run shared_$STAGE
+      - echo Building...
+      - cp serverless.$STAGE.yml serverless.yml
+      - npm run $STAGE
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: no

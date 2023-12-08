@@ -1,0 +1,22 @@
+# npm packages
+node_modules/
+
+# Serverless folder
+.serverless/
+
+# Environment variables
+.env
+
+# IDE Files
+.vscode
+.idea
+
+# tmp folder
+tmp/*
+
+# built folder
+built/*
+
+
+# MACOS
+.DS_Store/*

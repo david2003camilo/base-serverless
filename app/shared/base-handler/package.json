@@ -1,0 +1,22 @@
+{
+  "name": "base-handler",
+  "version": "1.0.0",
+  "dependencies": {
+    "@middy/core": "^2.5.1",
+    "@middy/http-cors": "^2.5.7",
+    "@opensearch-project/opensearch": "^2.0.0",
+    "aws-opensearch-connector": "^1.0.0",
+    "axios": "^0.26.1",
+    "js-sha512": "^0.8.0",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.29.2",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "request": "^2.81.0",
+    "sequelizer": "^1.1.4",
+    "uniqid": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.6.5"
+  }
+}

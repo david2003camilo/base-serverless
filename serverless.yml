@@ -1,0 +1,93 @@
+service: EXAMPLE-server
+
+plugins:
+  - serverless-localstack
+  - serverless-lift
+  - serverless-plugin-split-stacks
+  - serverless-latest-layer-version
+
+custom:
+  env:
+    JWT_PASS: ${file(./env.${opt:stage, opt:stage, 'local'}.json):JWT_PASS}
+    PATH_LIB: ${file(./env.${opt:stage, opt:stage, 'local'}.json):PATH_LIB}
+    PATH_LIB_SN_API: ${file(./env.${opt:stage, opt:stage, 'local'}.json):PATH_LIB_SN_API}
+    LOCAL_STACK_ENDPOINT: ${file(./env.${opt:stage, opt:stage, 'local'}.json):LOCAL_STACK_ENDPOINT}
+    NODE_ENV: ${file(./env.${opt:stage, opt:stage, 'local'}.json):NODE_ENV}
+    PACKAGE_PATTERNS_NODE_MODULES: ${file(./env.${opt:stage, opt:stage, 'local'}.json):PACKAGE_PATTERNS_NODE_MODULES}
+    PACKAGE_PATTERNS_SHARE: ${file(./env.${opt:stage, opt:stage, 'local'}.json):PACKAGE_PATTERNS_SHARE}
+    PACKAGE_INDIVIDUALLY: ${file(./env.${opt:stage, opt:stage, 'local'}.json):PACKAGE_INDIVIDUALLY}
+    AWS_KEY_ID: ${file(./env.${opt:stage, opt:stage, 'local'}.json):AWS_KEY_ID}
+    AWS_ACCESS_KEY: ${file(./env.${opt:stage, opt:stage, 'local'}.json):AWS_ACCESS_KEY}
+  stage: ${opt:stage, opt:stage, 'local'}
+  region: ${file(./env.${opt:stage, opt:stage, 'local'}.json):AWS_REGION}
+  awsUserId: ${file(./env.${opt:stage, opt:stage, 'local'}.json):AWS_USER_ID}
+  splitStacks:
+    nestedStackCount: 20 # Controls the number of created nested stacks
+    perFunction: false
+    perType: true
+    perGroupFunction: false
+  localstack:
+    debug: 1
+    stages:
+      - local_old
+  lambda:
+    mountCode: False
+  docker:
+    sudo: False
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - '*'
+      Resource:
+        - '*'
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  lambdaHashingVersion: 20201221
+  stage: ${self:custom.stage}
+
+package:
+  individually: ${self:custom.env.PACKAGE_INDIVIDUALLY}
+  patterns:
+    - '!built/**'
+    - '!app/**'
+    - '!.vscode/**'
+    - '!docker-compose.yml'
+    - '!package-lock.json'
+    - '!package.json'
+    - '!tsconfig.json'
+    - '!env.qa.json'
+    - '!env.prod.json'
+    - '!env.dev.json'
+    - '!env.local.json'
+    - '!README.MD'
+    - '!pull_request_template.md'
+    - '!mockup'
+    - ${self:custom.env.PACKAGE_PATTERNS_NODE_MODULES}
+    - ${self:custom.env.PACKAGE_PATTERNS_SHARE}
+    - serverless.yml
+    - buildspec.yml
+    - response.json
+
+functions:
+
+  ########### Example
+  hello-world:
+    handler: ./built/helloWorld/helloWorld.hello
+    timeout: 30
+    events:
+      - http:
+          path: /hello
+          method: POST
+          cors: true
+    layers:
+      - arn:aws:lambda:${self:custom.region}:${self:custom.awsUserId}:layer:base-handler-${self:custom.stage}:latest
+    environment:
+      PATH_LIB: ${self:custom.env.PATH_LIB}
+      NODE_ENV: ${self:custom.env.NODE_ENV}
+    package:
+      patterns:
+        - ./built/helloWorld/helloWord.js

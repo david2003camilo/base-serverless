@@ -1,0 +1,8 @@
+const path = require('path');
+
+module.exports = {
+  'config': path.resolve('app', 'shared', 'base-handler', 'database', 'config', 'sequelizer-config-db.json'),
+  'models-path': path.resolve('built', 'shared', 'base-handler', 'database', 'models'),
+  'seeders-path': path.resolve('built', 'shared', 'base-handler', 'database', 'seeders'),
+  'migrations-path': path.resolve('built', 'shared', 'base-handler', 'database', 'migrations')
+};
